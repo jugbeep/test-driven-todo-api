@@ -130,6 +130,6 @@ $(document).ready(function() {
           render();
         }
       });
+    module.exports = render;
     });
-
 });

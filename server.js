@@ -15,10 +15,10 @@ app.use(express.static(__dirname + '/public'));
  ************/
 
 // our database is an array for now with some hardcoded values
-var todos = [
-  // { _id: 1, task: 'Laundry', description: 'Wash clothes' },
-  // { _id: 2, task: 'Grocery Shopping', description: 'Buy dinner for this week' },
-  // { _id: 3, task: 'Homework', description: 'Make this app super awesome!' }
+let todos = [
+   { _id: 1, task: 'Laundry', description: 'Wash clothes' },
+   { _id: 2, task: 'Grocery Shopping', description: 'Buy dinner for this week' },
+   { _id: 3, task: 'Homework', description: 'Make this app super awesome!' }
 ];
 
 /**********
@@ -31,6 +31,7 @@ var todos = [
 
 app.get('/', function homepage(req, res) {
   res.sendFile(__dirname + '/views/index.html');
+  
 });
 
 
@@ -44,27 +45,38 @@ app.get('/', function homepage(req, res) {
  * ORDER THAT THE TESTS DICTATE.
  */
 
-app.get('/api/todos/search', function search(req, res) {
-  /* This endpoint responds with the search results from the
-   * query in the request. COMPLETE THIS ENDPOINT LAST.
-   */
-});
+// app.get('/api/todos/search', function search(req, res) {
+//    This endpoint responds with the search results from the
+//    * query in the request. COMPLETE THIS ENDPOINT LAST.
+   
+// });
 
 app.get('/api/todos', function index(req, res) {
   /* This endpoint responds with all of the todos
    */
-});
+  res.json({todos});
+}); 
 
 app.post('/api/todos', function create(req, res) {
   /* This endpoint will add a todo to our "database"
    * and respond with the newly created todo.
    */
+  let newTodo = res.body;
+
+  todos.push({
+    id: todos.length +1,
+    description: newTodo.description,
+    task: newTodo.task
+  });
+  res.redirect('/');
+  res.status(201)
 });
 
 app.get('/api/todos/:id', function show(req, res) {
   /* This endpoint will return a single todo with the
    * id specified in the route parameter (:id)
    */
+
 });
 
 app.put('/api/todos/:id', function update(req, res) {
@@ -89,3 +101,8 @@ app.delete('/api/todos/:id', function destroy(req, res) {
 app.listen(3000, function() {
   console.log('Server running on http://localhost:3000');
 });
+
+// module.exports = {
+//    app.get: app.get,
+// }
+
