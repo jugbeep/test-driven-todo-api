@@ -61,21 +61,23 @@ app.post('/api/todos', function create(req, res) {
   /* This endpoint will add a todo to our "database"
    * and respond with the newly created todo.
    */
-  let newTodo = res.body;
-
+  let newTodo = req.body;
   todos.push({
-    id: todos.length +1,
     description: newTodo.description,
-    task: newTodo.task
+    task: newTodo.task,
+    _id: todos.length +1,
   });
+  res.send(newTodo);
   res.redirect('/');
-  res.status(201)
+ 
+ 
 });
 
 app.get('/api/todos/:id', function show(req, res) {
   /* This endpoint will return a single todo with the
    * id specified in the route parameter (:id)
    */
+ // fetchId = parseInt (data.todos.spot_id);
 
 });
 
