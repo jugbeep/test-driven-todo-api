@@ -31,7 +31,7 @@ let todos = [
 
 app.get('/', function homepage(req, res) {
   res.sendFile(__dirname + '/views/index.html');
-  res.json({todos});
+  // res.json({todos}); c
 });
 
 /*
@@ -76,16 +76,29 @@ app.get('/api/todos/:id', function show(req, res) {
    * id specified in the route parameter (:id)
    */
 
-  foundId = req.params.id;
-  console.log(req.params.id);
-  
-  let found = todos.filter(function(id) {
-      return id._id == foundId;
-  });
-  console.log('fetched a task by id')
-  console.log(found);
-  res.json({found});
 
+  /////this works but is throwing and error. very annoying//////
+  foundId =  parseInt(req.params.id);
+  
+  let find = todos.filter(function (id) {
+      return id._id == foundId;
+  })[0];
+
+  res.json(find);
+  /////this works but is throwing and error. very annoying/////
+
+
+  let searchParams = req.params;
+  console.log(searchParams);
+  
+  getById(todos, searchParams);
+
+  function getById(arr, value) {
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i].b === value) return arr[i];
+      console.log(arr[i]);
+    }
+  }
 
 });
 
@@ -94,29 +107,22 @@ app.put('/api/todos/:id', function update(req, res) {
    * id specified in the route parameter (:id) and respond
    * with the newly updated todo.
    */
-  putUpdate = req.body;
-  foundId = req.params.id;
-  let putId = ('_id: ' + foundId);
-  console.log(putId);
-  let fullPut = putUpdate + putId;
+  let foundId = Number(req.params.id);
 
+  if(!req.body.task || !req.body.description) {
+    res.send('Fill out the both fields');
 
-  let remRep = todos.splice(foundId-1, 1, putUpdate);
+  } else 
+    req.body.id = foundId;
+    let newTodo = todos.find(function(todos) {
+      return todos._id === Number(req.params.id);
+    });
 
-  console.log(remRep);
+  newTodo.task = req.body.task;
 
-  res.json({remRep});
+  newTodo.description = req.body.description;
 
-  // console.log(foundId);
-  // let found = todos.filter(function(id) {
-  //     return id._id == foundId;
-  // });
-  // console.log(found)
-  // let replaced = todos.splice(foundId+1, 1, putUpdate)
-  // console.log(found)
-  // console.log(({replaced}).json);
-  // console.log('Ran put');
-  // res.json({replaced});
+  res.json(newTodo);
 
   })
 
@@ -126,12 +132,10 @@ app.delete('/api/todos/:id', function destroy(req, res) {
    * id specified in the route parameter (:id) and respond
    * with deleted todo.
    */
-   remove = req.params.id;
-   popIt = todos.pop(remove);
-   console.log(remove);
-   console.log(popIt);
-   console.log('Found the Delete button');
-   res.json({todos});
+   remove = Number(req.params.id);
+   popIt = todos.splice( (remove -1), 1); ;
+ 
+   res.json({remove});
    
 });
 
